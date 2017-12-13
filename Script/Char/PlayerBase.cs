@@ -25,12 +25,11 @@ public class PlayerBase : CharBase
 
 		Move ();
 		Jump ();
-		/*
 		if (attackFlg) {
 			ComboCheck ();
 		} else {
 			Attack ();
-		}*/
+		}
 	}
 
 	protected void Move ()
@@ -56,19 +55,15 @@ public class PlayerBase : CharBase
 
 	protected void Jump ()
 	{
-
-
-
 		jumpFlg = Physics.Raycast (transform.position,
 			transform.up * -1, 2.1f);
-
 
 		Debug.DrawRay (transform.position, transform.up);
 		Debug.Log (jumpFlg);
 
 		if (Input.GetKeyDown (KeyCode.Space) && jumpFlg) {
 			charGravity.AddForce (0, 750, 0);
-		} else {
+		} else if (jumpFlg == false) {
 			charGravity.AddForce (0, -20, 0);
 		}
 
@@ -76,7 +71,7 @@ public class PlayerBase : CharBase
 
 	protected void Attack ()
 	{
-		if (Input.GetKeyDown (KeyCode.A)) {
+		if (Input.GetButtonDown ("Fire1")) {
 			attackFlg = true;
 			combo++;
 			charAnimator.SetInteger ("combo", combo);
@@ -88,7 +83,7 @@ public class PlayerBase : CharBase
 		AnimatorStateInfo info = charAnimator.GetCurrentAnimatorStateInfo (0);
 		float totalTime = info.length * info.speed;
 		int nowCommbo = charAnimator.GetInteger ("combo");
-		if (Input.GetKeyDown (KeyCode.A) && !inputFlg) {
+		if (Input.GetButtonDown ("Fire1") && !inputFlg) {
 			inputFlg = true;
 			combo++;
 			charAnimator.SetInteger ("combo", combo);
