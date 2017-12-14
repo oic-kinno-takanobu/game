@@ -5,7 +5,14 @@ using UnityEditor.Animations;
 
 public class PlayerBase : CharBase
 {
+	[SerializeField]
+	protected GameObject magicObj;
+
 	protected float inputTime = 0.4f;
+	protected float maxMagicIntervalTime = 0.2f;
+	protected float magicIntervalTime;
+
+
 	protected int maxCombo = 3;
 	protected int combo = 0;
 
@@ -30,8 +37,13 @@ public class PlayerBase : CharBase
 		} else {
 			Attack ();
 		}
+		MagicAttack ();
 	}
 
+	/// <summary>
+	/// 移動処理
+	/// Move this instance.
+	/// </summary>
 	protected void Move ()
 	{
 		float hori = Input.GetAxis ("Horizontal");
@@ -53,6 +65,10 @@ public class PlayerBase : CharBase
 
 	}
 
+	/// <summary>
+	/// ジャンプ処理
+	/// Jump this instance.
+	/// </summary>
 	protected void Jump ()
 	{
 		jumpFlg = Physics.Raycast (transform.position,
@@ -69,6 +85,21 @@ public class PlayerBase : CharBase
 
 	}
 
+	protected void MagicAttack ()
+	{
+		if (magicIntervalTime > 0) {
+			magicIntervalTime -= Time.deltaTime;
+		} else if (Input.GetButtonDown ("Fire2")) {
+			magicIntervalTime = maxMagicIntervalTime;
+			Destroy (Instantiate (magicObj, transform.position, transform.rotation), 5f);
+		}
+
+	}
+
+	/// <summary>
+	/// 攻撃開始
+	/// Attack this instance.
+	/// </summary>
 	protected void Attack ()
 	{
 		if (Input.GetButtonDown ("Fire1")) {
@@ -78,6 +109,10 @@ public class PlayerBase : CharBase
 		}
 	}
 
+	/// <summary>
+	/// コンボ処理
+	/// Combos the check.
+	/// </summary>
 	protected void ComboCheck ()
 	{
 		AnimatorStateInfo info = charAnimator.GetCurrentAnimatorStateInfo (0);
